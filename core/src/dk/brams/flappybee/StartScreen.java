@@ -1,13 +1,17 @@
 package dk.brams.flappybee;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class StartScreen extends ScreenAdapter{
@@ -18,6 +22,14 @@ public class StartScreen extends ScreenAdapter{
     private Texture bgTexture;
     private Texture bUpTexture;
     private Texture bDnTexture;
+    private Texture titleTexture;
+
+    private final Game game;
+
+    public StartScreen(Game game) {
+        this.game = game;
+    }
+
 
     public void show(){
         stage = new Stage(new FitViewport(WORLD_WIDTH, WORLD_HEIGHT));
@@ -33,7 +45,23 @@ public class StartScreen extends ScreenAdapter{
                 new TextureRegionDrawable(new TextureRegion(bUpTexture)),
                 new TextureRegionDrawable(new TextureRegion(bDnTexture))
         );
+
+        // Add event listener to this button
+        play.addListener(new ActorGestureListener(){
+            public void tap(InputEvent event, float x, float y, int count, int button){
+                super.tap(event, x, y, count, button);
+                game.setScreen(new GameScreen());
+                dispose();
+            }
+        });
+
+        play.setPosition(WORLD_WIDTH/2,WORLD_HEIGHT/4, Align.center);
         stage.addActor(play);
+
+        titleTexture = new Texture(Gdx.files.internal("title.png"));
+        Image titleImage = new Image(titleTexture);
+        titleImage.setPosition(WORLD_WIDTH/2, 3*WORLD_HEIGHT/4, Align.center);
+        stage.addActor(titleImage);
 
 
     }
