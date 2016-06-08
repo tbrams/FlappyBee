@@ -24,12 +24,17 @@ public class Flower {
     private float y = 0;
     private boolean pointClaimed = false;
 
-    private Circle collisionCircle;
-    private Rectangle collisionRectangle;
+    private Circle topCollisionCircle;
+    private Circle botCollisionCircle;
+    private Rectangle topCollisionRectangle;
+    private Rectangle botCollisionRectangle;
 
     public Flower(){
-        this.collisionRectangle = new Rectangle(x, y, COLLISION_RECTANGLE_WIDTH, COLLISION_RECTANGLE_HEIGHT);
-        this.collisionCircle = new Circle(x + collisionRectangle.width / 2, y + collisionRectangle.height, COLLISION_CIRCLE_RADIUS);
+        this.y = MathUtils.random(HEIGHT_OFFSET);
+        this.botCollisionRectangle = new Rectangle(x, y, COLLISION_RECTANGLE_WIDTH, COLLISION_RECTANGLE_HEIGHT);
+        this.botCollisionCircle = new Circle(x + botCollisionRectangle.width / 2, y + botCollisionRectangle.height, COLLISION_CIRCLE_RADIUS);
+        topCollisionRectangle = new Rectangle(x, botCollisionCircle.y+DISTANCE_BETWEEN_FLOOR_AND_CEILING, COLLISION_RECTANGLE_WIDTH,COLLISION_RECTANGLE_HEIGHT);
+        topCollisionCircle = new Circle(x+topCollisionRectangle.width/2,topCollisionRectangle.y,COLLISION_CIRCLE_RADIUS);
     }
 
 
@@ -58,11 +63,13 @@ public class Flower {
     }
 
     private void updateCollisionCircle() {
-        collisionCircle.setX(x + collisionRectangle.width / 2);
+        botCollisionCircle.setX(x + botCollisionRectangle.width / 2);
+        topCollisionCircle.setX(x + topCollisionRectangle.width / 2);
     }
 
     private void updateCollisionRectangle() {
-        collisionRectangle.setX(x);
+        botCollisionRectangle.setX(x);
+        topCollisionRectangle.setX(x);
     }
 
     public void draw(SpriteBatch batch) {
@@ -70,7 +77,9 @@ public class Flower {
 
 
     public void drawDebug(ShapeRenderer shapeRenderer) {
-        shapeRenderer.circle(collisionCircle.x, collisionCircle.y, collisionCircle.radius);
-        shapeRenderer.rect(collisionRectangle.x, collisionRectangle.y, collisionRectangle.width, collisionRectangle.height);
+        shapeRenderer.circle(botCollisionCircle.x, botCollisionCircle.y, botCollisionCircle.radius);
+        shapeRenderer.rect(botCollisionRectangle.x, botCollisionRectangle.y, botCollisionRectangle.width, botCollisionRectangle.height);
+        shapeRenderer.circle(topCollisionCircle.x, topCollisionCircle.y, topCollisionCircle.radius);
+        shapeRenderer.rect(topCollisionRectangle.x, topCollisionRectangle.y, topCollisionRectangle.width, topCollisionRectangle.height);
     }
 }
