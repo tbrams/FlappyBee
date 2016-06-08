@@ -10,11 +10,11 @@ public class Flappy {
     private static final float FLY_ACCEL = 5F;
     private float ySpeed = 0;
 
-    private final Circle collisionCircle;
+    private static Circle collisionCircle;
 
     private float x=0;
 
-    public Circle getCollisionCircle() {
+    public static Circle getCollisionCircle() {
         return collisionCircle;
     }
 

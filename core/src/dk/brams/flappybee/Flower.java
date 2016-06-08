@@ -72,6 +72,16 @@ public class Flower {
         topCollisionRectangle.setX(x);
     }
 
+    public boolean isFlappeeColliding(Flappy flappee) {
+        Circle flappyCollisionCircle = Flappy.getCollisionCircle();
+        return
+                Intersector.overlaps(flappyCollisionCircle, topCollisionCircle) ||
+                        Intersector.overlaps(flappyCollisionCircle, botCollisionCircle) ||
+                        Intersector.overlaps(flappyCollisionCircle, topCollisionRectangle) ||
+                        Intersector.overlaps(flappyCollisionCircle, botCollisionRectangle);
+    }
+
+
     public void draw(SpriteBatch batch) {
     }
 

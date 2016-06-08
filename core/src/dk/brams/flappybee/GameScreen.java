@@ -25,6 +25,7 @@ public class GameScreen extends ScreenAdapter {
     private SpriteBatch sb;
     private Flappy flappy;
 
+    private int score=0;
     private Array<Flower> flowers = new Array<Flower>();
 
 
@@ -86,6 +87,26 @@ public class GameScreen extends ScreenAdapter {
         }
         checkIfNewFlowerIsNeeded();
         removeFlowersIfPassed();
+        
+        if (checkForCollision()){
+            restart();
+        }
+    }
+
+    private void restart() {
+        flappy.setPosition(WORLD_WIDTH / 4, WORLD_HEIGHT / 2);
+        flowers.clear();
+        score = 0;
+    }
+
+
+    private boolean checkForCollision() {
+        for (Flower flower : flowers) {
+            if (flower.isFlappeeColliding(flappy)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void blockFlappeeLeavingTheWorld() {
