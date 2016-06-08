@@ -74,4 +74,14 @@ public class StartScreen extends ScreenAdapter{
         stage.act(delta);
         stage.draw();
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        stage.dispose();
+        bDnTexture.dispose();
+        bDnTexture.dispose();
+        bUpTexture.dispose();
+        titleTexture.dispose();
+    }
 }
