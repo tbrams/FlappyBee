@@ -75,7 +75,7 @@ public class GameScreen extends ScreenAdapter {
         clearScreen();
         draw();
 
-        drawDebug();
+        // drawDebug();
     }
 
     private void drawDebug() {
@@ -91,7 +91,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void update(float delta) {
-        updateFloppy(delta);
+        updateFlappy(delta);
         updateFlowers(delta);
         updateScore();
         if (checkForCollision())
@@ -110,7 +110,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    private void updateFloppy(float delta) {
+    private void updateFlappy(float delta) {
         flappy.update(delta);
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) flappy.flyUp();
         blockFlappeeLeavingTheWorld();

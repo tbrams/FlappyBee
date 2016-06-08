@@ -24,15 +24,15 @@ public class Flower {
     private float y = 0;
     private boolean pointClaimed = false;
 
-    private Circle topCollisionCircle;
-    private Circle botCollisionCircle;
-    private Rectangle topCollisionRectangle;
-    private Rectangle botCollisionRectangle;
+    private final Circle topCollisionCircle;
+    private final Circle botCollisionCircle;
+    private final Rectangle topCollisionRectangle;
+    private final Rectangle botCollisionRectangle;
 
     private final Texture topTexture;
     private final Texture botTexture;
 
-    public Flower(Texture top, Texture bottom){
+    public Flower(Texture bottom, Texture top){
         topTexture=top;
         botTexture=bottom;
         y = MathUtils.random(HEIGHT_OFFSET);
