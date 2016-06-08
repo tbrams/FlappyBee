@@ -10,18 +10,23 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class GameScreen extends ScreenAdapter {
     public static final float WORLD_WIDTH=480;
     public static final float WORLD_HEIGHT=640;
+    private static final float GAP_BETWEEN_FLOWERS = 200F;
+
 
     private ShapeRenderer shapeRenderer;
     private FitViewport viewPort;
     private Camera camera;
     private SpriteBatch sb;
     private Flappy flappy;
-    private Flower flower;
+
+    private Array<Flower> flowers = new Array<Flower>();
+
 
 
     @Override
@@ -41,8 +46,6 @@ public class GameScreen extends ScreenAdapter {
         flappy = new Flappy();
         flappy.setPosition(WORLD_WIDTH / 4, WORLD_HEIGHT / 2);
 
-        flower = new Flower();
-
     }
 
     @Override
@@ -50,15 +53,20 @@ public class GameScreen extends ScreenAdapter {
         clearScreen();
         sb.setProjectionMatrix(camera.projection);
         sb.setTransformMatrix(camera.view);
-        sb.begin();
-        sb.end();
 
         shapeRenderer.setProjectionMatrix(camera.projection);
         shapeRenderer.setTransformMatrix(camera.view);
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
         flappy.drawDebug(shapeRenderer);
-        flower.drawDebug(shapeRenderer);
+        for (Flower flower :flowers) {
+            flower.drawDebug(shapeRenderer);
+        }
         shapeRenderer.end();
+
+        sb.begin();
+        sb.end();
 
         update(delta);
 
@@ -68,11 +76,47 @@ public class GameScreen extends ScreenAdapter {
         flappy.update(delta);
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) flappy.flyUp();
         blockFlappeeLeavingTheWorld();
+        updateFlowers(delta);
 
+    }
+
+    private void updateFlowers(float delta) {
+        for (Flower flower :flowers) {
+            flower.update(delta);
+        }
+        checkIfNewFlowerIsNeeded();
+        removeFlowersIfPassed();
     }
 
     private void blockFlappeeLeavingTheWorld() {
         flappy.setPosition(flappy.getX(), MathUtils.clamp(flappy.getY(), 0, WORLD_HEIGHT));
+    }
+
+
+    private void createNewFlower() {
+        Flower newFlower = new Flower();
+        newFlower.setPosition(WORLD_WIDTH + Flower.WIDTH);
+        flowers.add(newFlower);
+    }
+
+    private void checkIfNewFlowerIsNeeded() {
+        if (flowers.size == 0) {
+            createNewFlower();
+        } else {
+            Flower flower = flowers.peek();
+            if (flower.getX() < WORLD_WIDTH - GAP_BETWEEN_FLOWERS) {
+                createNewFlower();
+            }
+        }
+    }
+
+    private void removeFlowersIfPassed() {
+        if (flowers.size > 0) {
+            Flower firstFlower = flowers.first();
+            if (firstFlower.getX() < -Flower.WIDTH) {
+                flowers.removeValue(firstFlower, true);
+            }
+        }
     }
 
     private void clearScreen() {

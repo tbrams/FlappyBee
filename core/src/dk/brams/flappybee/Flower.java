@@ -14,10 +14,11 @@ public class Flower {
     private static final float COLLISION_RECTANGLE_HEIGHT = 447f;
     private static final float COLLISION_CIRCLE_RADIUS = 33f;
 
+    public static final float WIDTH = COLLISION_CIRCLE_RADIUS * 2;
+
+
     private static final float HEIGHT_OFFSET = -400f;
     private static final float DISTANCE_BETWEEN_FLOOR_AND_CEILING = 225F;
-
-    public static final float WIDTH = COLLISION_CIRCLE_RADIUS * 2;
 
     private float x = 0;
     private float y = 0;
