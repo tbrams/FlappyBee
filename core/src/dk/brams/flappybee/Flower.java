@@ -29,10 +29,15 @@ public class Flower {
     private Rectangle topCollisionRectangle;
     private Rectangle botCollisionRectangle;
 
-    public Flower(){
-        this.y = MathUtils.random(HEIGHT_OFFSET);
-        this.botCollisionRectangle = new Rectangle(x, y, COLLISION_RECTANGLE_WIDTH, COLLISION_RECTANGLE_HEIGHT);
-        this.botCollisionCircle = new Circle(x + botCollisionRectangle.width / 2, y + botCollisionRectangle.height, COLLISION_CIRCLE_RADIUS);
+    private final Texture topTexture;
+    private final Texture botTexture;
+
+    public Flower(Texture top, Texture bottom){
+        topTexture=top;
+        botTexture=bottom;
+        y = MathUtils.random(HEIGHT_OFFSET);
+        botCollisionRectangle = new Rectangle(x, y, COLLISION_RECTANGLE_WIDTH, COLLISION_RECTANGLE_HEIGHT);
+        botCollisionCircle = new Circle(x + botCollisionRectangle.width / 2, y + botCollisionRectangle.height, COLLISION_CIRCLE_RADIUS);
         topCollisionRectangle = new Rectangle(x, botCollisionCircle.y+DISTANCE_BETWEEN_FLOOR_AND_CEILING, COLLISION_RECTANGLE_WIDTH,COLLISION_RECTANGLE_HEIGHT);
         topCollisionCircle = new Circle(x+topCollisionRectangle.width/2,topCollisionRectangle.y,COLLISION_CIRCLE_RADIUS);
     }
@@ -81,8 +86,20 @@ public class Flower {
                         Intersector.overlaps(flappyCollisionCircle, botCollisionRectangle);
     }
 
-
     public void draw(SpriteBatch batch) {
+        drawBottomFlower(batch);
+        drawTopFlower(batch);
+    }
+
+    private void drawBottomFlower(SpriteBatch batch) {
+        float textureX = botCollisionCircle.x - botTexture.getWidth() / 2;
+        float textureY = botCollisionRectangle.getY() + COLLISION_CIRCLE_RADIUS;
+        batch.draw(botTexture, textureX, textureY);
+    }
+    private void drawTopFlower(SpriteBatch batch) {
+        float textureX = topCollisionCircle.x - topTexture.getWidth() / 2;
+        float textureY = topCollisionRectangle.getY() - COLLISION_CIRCLE_RADIUS;
+        batch.draw(topTexture, textureX, textureY);
     }
 
 
