@@ -77,7 +77,7 @@ public class Flower {
         topCollisionRectangle.setX(x);
     }
 
-    public boolean isFlappeeColliding(Flappy flappee) {
+    public boolean isFlappyColliding(Flappy flappee) {
         Circle flappyCollisionCircle = Flappy.getCollisionCircle();
         return
                 Intersector.overlaps(flappyCollisionCircle, topCollisionCircle) ||
@@ -97,8 +97,8 @@ public class Flower {
         batch.draw(botTexture, textureX, textureY);
     }
     private void drawTopFlower(SpriteBatch batch) {
-        float textureX = topCollisionCircle.x - topTexture.getWidth() / 2;
-        float textureY = topCollisionRectangle.getY() - COLLISION_CIRCLE_RADIUS;
+        float textureX = topCollisionCircle.x-topTexture.getWidth()/2;
+        float textureY = topCollisionRectangle.getY()-COLLISION_CIRCLE_RADIUS;
         batch.draw(topTexture, textureX, textureY);
     }
 

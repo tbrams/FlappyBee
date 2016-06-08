@@ -40,11 +40,13 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
+        super.resize(width, height);
         viewPort.update(width, height);
     }
 
     @Override
     public void show() {
+        super.show();
         bitmapFont = new BitmapFont();
         glyphLayout = new GlyphLayout();
 
@@ -55,23 +57,28 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
         sb = new SpriteBatch();
 
-        flappy = new Flappy();
-        flappy.setPosition(WORLD_WIDTH / 4, WORLD_HEIGHT / 2);
 
         bg = new Texture(Gdx.files.internal("bg.png"));
         flowerBottom = new Texture(Gdx.files.internal("flowerBottom.png"));
         flowerTop = new Texture(Gdx.files.internal("flowerTop.png"));
-        // flappyTexture = new Texture(Gdx.files.internal("bee.png"));
-
-        // flappy = new Flappy(flappyTexture);
+        flappyTexture = new Texture(Gdx.files.internal("bee.png"));
+        flappy = new Flappy(flappyTexture);
+        flappy.setPosition(WORLD_WIDTH / 4, WORLD_HEIGHT / 2);
 
 
     }
 
     @Override
     public void render(float delta) {
+        super.render(delta);
+        update(delta);
         clearScreen();
+        draw();
 
+        drawDebug();
+    }
+
+    private void drawDebug() {
         shapeRenderer.setProjectionMatrix(camera.projection);
         shapeRenderer.setTransformMatrix(camera.view);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -81,10 +88,14 @@ public class GameScreen extends ScreenAdapter {
             flower.drawDebug(shapeRenderer);
         }
         shapeRenderer.end();
+    }
 
-        draw();
-        update(delta);
-
+    private void update(float delta) {
+        updateFloppy(delta);
+        updateFlowers(delta);
+        updateScore();
+        if (checkForCollision())
+            restart();
     }
 
     private void draw() {
@@ -93,16 +104,16 @@ public class GameScreen extends ScreenAdapter {
         sb.begin();
         sb.draw(bg, 0,0);
         drawFlowers();
+        flappy.draw(sb);
         drawScore();
         sb.end();
     }
 
-    private void update(float delta) {
+
+    private void updateFloppy(float delta) {
         flappy.update(delta);
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) flappy.flyUp();
         blockFlappeeLeavingTheWorld();
-        updateFlowers(delta);
-        updateScore();
     }
 
 
@@ -153,23 +164,18 @@ public class GameScreen extends ScreenAdapter {
 
     private boolean checkForCollision() {
         for (Flower flower : flowers) {
-            if (flower.isFlappeeColliding(flappy)) {
+            if (flower.isFlappyColliding(flappy)) {
                 return true;
             }
         }
         return false;
     }
 
+
     private void blockFlappeeLeavingTheWorld() {
         flappy.setPosition(flappy.getX(), MathUtils.clamp(flappy.getY(), 0, WORLD_HEIGHT));
     }
 
-
-    private void createNewFlower() {
-        Flower newFlower = new Flower(flowerBottom, flowerTop);
-        newFlower.setPosition(WORLD_WIDTH + Flower.WIDTH);
-        flowers.add(newFlower);
-    }
 
     private void checkIfNewFlowerIsNeeded() {
         if (flowers.size == 0) {
@@ -181,6 +187,14 @@ public class GameScreen extends ScreenAdapter {
             }
         }
     }
+
+
+    private void createNewFlower() {
+        Flower newFlower = new Flower(flowerBottom, flowerTop);
+        newFlower.setPosition(WORLD_WIDTH + Flower.WIDTH);
+        flowers.add(newFlower);
+    }
+
 
     private void removeFlowersIfPassed() {
         if (flowers.size > 0) {
